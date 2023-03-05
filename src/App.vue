@@ -1,46 +1,26 @@
 <template>
-  <nav class="bg-dark p-3">
-    <div class="container nav-items d-flex align-items-center justify-content-between">
-      <img src="./assets/logo.svg" alt="" width="36px">
-      <ul class="d-flex list-unstyled">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Create</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+ <NavBar/>
 
   <main>
     <div class="container">
       <Alert message="TODO TITLE IS REQUIRED" :show="showalert" type="danger" @close="showalert = false" />
 
       <section class="form-section">
-        <form class="form">
-          <div class="form-group">
-            <input v-model="todoTitle" type="text" class="form-control" name="" id="" placeholder="ToDo Title">
-          </div>
-          <button @click.prevent="addTodo" type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        <AddTodoForm @submit="addTodo"/>
       </section>
 
       <section class="list">
-        <div v-for="todo in todos" class="list-item bg-dark d-flex align-items-center justify-content-between"
-          :key="todo.id">
-          <h4>{{ todo.title }}</h4>
-          <div class="buttons">
-            <button @click="removeTodo(todo)" class="btn btn-danger btn-circle">X</button>
-          </div>
-        </div>
+        <TodoList v-for="todo in todos" :key="todo.id" :title="todo.title" @remove="removeTodo(todo.id)"/>
       </section>
     </div>
   </main>
 </template>
 
 <script>
+import AddTodoForm from './components/AddTodoForm.vue';
 import Alert from './components/Alert.vue'
+import NavBar from './components/NavBar.vue';
+import TodoList from './components/TodoList.vue';
 
 export default {
   components: {
@@ -54,21 +34,21 @@ export default {
     };
   },
   methods: {
-    addTodo() {
-      if (this.todoTitle === "") {
+    addTodo(title) {
+      if (title === "") {
         this.showalert = true;
         return;
       }
       this.todos.push({
-        title: this.todoTitle,
+        title,
         id: Math.floor(Math.random() * 1000)
       });
     },
-    removeTodo(todoTitle) {
-      this.todos = this.todos.filter(todo => todo !== todoTitle);
+    removeTodo(id) {
+      this.todos = this.todos.filter((todo) => todo.id !== id);
     }
   },
-  components: { Alert }
+  components: { Alert, AddTodoForm, NavBar, TodoList }
 }
 </script>
 
