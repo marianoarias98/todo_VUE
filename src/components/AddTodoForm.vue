@@ -3,18 +3,21 @@
     <div class="form-group">
       <input v-model="todoTitle" type="text" class="form-control" placeholder="ToDo Title">
     </div>
-    <button @click.prevent="$emit('submit', todoTitle)" type="submit" class="btn btn-primary">Submit</button>
+    <Btn @click="$emit('submit', todoTitle)" type="success"  >Submit</Btn>
   </form>
 </template>
 
 <script>
+import Btn from './Btn.vue';
+
   export default {
-  data() {
-    return {
-      todoTitle: "",
-    };
-  },
-  emits: ["submit"],
+    data() {
+        return {
+            todoTitle: "",
+        };
+    },
+    emits: ["submit"],
+    components: { Btn }
 };
 </script>
 

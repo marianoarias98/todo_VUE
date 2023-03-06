@@ -2,12 +2,13 @@
   <div class="list-item bg-dark d-flex align-items-center justify-content-between">
     <h4>{{ title }}</h4>
     <div class="buttons">
-      <button @click="$emit('remove')" class="btn btn-danger btn-circle">X</button>
+      <Btn @click="$emit('remove')" type="danger">X</Btn>
     </div>
   </div>
 </template>
 
 <script>
+import Btn from './Btn.vue';
 export default {
   props: {
     title: {
@@ -15,7 +16,8 @@ export default {
       type: String,
     },
   },
-  emits: ['remove']
+  emits: ['remove'],
+  components: { Btn }
 };
 </script>
 
