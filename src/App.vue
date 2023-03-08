@@ -3,7 +3,7 @@
 
   <main>
     <div class="container">
-      <Modal title="Edit Todo" :show="editTodoForm.show">
+      <Modal title="Edit Todo" :show="editTodoForm.show" @close="editTodoForm.show = false">
         <template #header>
           <h5>Edit Todo</h5>
           <Btn type="secondary" @click="editTodoForm.show = false">X</Btn>

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="show" class="modal">
+  <div ref="modal" v-show="show" class="modal">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -23,6 +23,21 @@
 import Btn from './Btn.vue';
 
 export default {
+  data() {
+    return {
+      clickListener: (e) => {
+        console.log(e.target);
+        if (e.target === this.$refs.modal) {
+          this.$emit("close");
+        }
+      },
+      closeOnEscapeListener: (e) => {
+        if (e.key === "Escape") {
+          this.$emit('close');
+        }
+      }
+    };
+  },
   props: {
     title: {
       required: true,
@@ -47,7 +62,16 @@ export default {
     close: {
       show: false
     }
-  }
+  },
+  emits: ["close"],
+  mounted() {
+    window.addEventListener("click", this.clickListener);
+    window.addEventListener("keydown", this.closeOnEscapeListener);
+  },
+  beforeUnmount() {
+    window.removeEventListener("click", this.clickListener);
+    window.removeEventListener("keydown", this.closeOnEscapeListener);
+  },
 }
 </script>
 
