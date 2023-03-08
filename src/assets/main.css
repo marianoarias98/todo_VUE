@@ -2,9 +2,10 @@
 
 :root{
   --danger-color: #c81d2b;
-  --warning-color: #E5C07B;
+  --warning-color: #d9ba09;
   --info-color: #61AFEF;
   --success-color: hsla(160, 100%, 37%, 1);
+  --secondary-color: #212529;
 }
 
 #app {

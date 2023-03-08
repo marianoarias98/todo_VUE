@@ -23,6 +23,7 @@ export default {
         danger: "var(--danger-color)",
         info: "var(--info-color)",
         warning: "var(--warning-color)",
+        secondary: "var(--secondary-color)"
       }
       return options[this.type];
     }
