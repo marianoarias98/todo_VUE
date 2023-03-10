@@ -24,7 +24,7 @@
         </template>
       </Modal>
 
-      <Alert message="TODO TITLE IS REQUIRED" :show="showalert" type="danger" @close="showalert = false" />
+      <Alert :message="alert.message" :show="alert.show" :type="alert.type" @close="alert.show = false" />
 
       <section class="form-section">
         <AddTodoForm @submit="addTodo" />
@@ -45,13 +45,19 @@ import Modal from './components/Modal.vue';
 import NavBar from './components/NavBar.vue';
 import TodoList from './components/TodoList.vue';
 import Btn from './components/Btn.vue';
+import axios from "axios";
+import { EMPTY_ARR, EMPTY_OBJ } from '@vue/shared';
 
 export default {
   data() {
     return {
       todoTitle: "",
       todos: [],
-      showalert: false,
+      alert: {
+        show: false,
+        message: "",
+        type: "danger"
+      },
       editTodoForm: {
         show: false,
         todo: {
@@ -61,24 +67,42 @@ export default {
       }
     };
   },
+  created() {
+    this.fetchTodos();
+  },
   methods: {
-    addTodo(title) {
+    async fetchTodos() {
+      try {
+        const res = await axios.get('http://localhost:8080/todos');
+        this.todos = await res.data;
+      } catch (e) {
+        this.showAlert("Failed loading todos, check your internet connection");
+      }
+    },
+
+    showAlert(message, type = "danger") {
+      this.alert.show = true;
+      this.alert.message = message;
+      this.alert.type = type;
+    },
+
+    async addTodo(title) {
       if (title === "") {
-        this.showalert = true;
+        this.showAlert("Todo title is required");
         return;
       }
-      this.todos.push({
-        title,
-        id: Math.floor(Math.random() * 1000)
-      });
+      const res = await axios.post('http://localhost:8080/todos', { title });
+
+      this.todos.push(res.data);
     },
-    removeTodo(id) {
+    async removeTodo(id) {
+      await axios.delete(`http://localhost:8080/todos/${id}`);
       this.todos = this.todos.filter((todo) => todo.id !== id);
     },
 
     showEditTodoForm(todo) {
       this.editTodoForm.show = true;
-      this.editTodoForm.todo = { ...todo };
+      this.fetchTodos()
     },
 
     updateTodo() {
