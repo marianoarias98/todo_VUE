@@ -3,21 +3,31 @@
     <div class="form-group">
       <input v-model="todoTitle" type="text" class="form-control" placeholder="ToDo Title">
     </div>
-    <Btn @click="$emit('submit', todoTitle)" type="success"  >Submit</Btn>
+    <Btn :disabled="isLoading" type="submit" class="btn btn-primary" @click="$emit('submit', todoTitle)">
+      <Spinner v-if="isLoading" />
+      <span v-else>Add Todo</span>
+    </Btn>
   </form>
 </template>
 
 <script>
 import Btn from './Btn.vue';
+import Spinner from "./Spinner.vue";
 
-  export default {
-    data() {
-        return {
-            todoTitle: "",
-        };
+export default {
+  data() {
+    return {
+      todoTitle: "",
+    };
+  },
+  emits: ["submit"],
+  components: { Btn, Spinner },
+  props: {
+    isLoading: {
+      default: false,
+      type: Boolean
     },
-    emits: ["submit"],
-    components: { Btn }
+  },
 };
 </script>
 

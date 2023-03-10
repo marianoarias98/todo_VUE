@@ -38,4 +38,7 @@ button{
   font-weight: bold;
   border: 1px solid rgba(0, 0, 0, 0.516);
 }
+.btn:disabled {
+  opacity: 80%;
+}
 </style>

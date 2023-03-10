@@ -27,10 +27,11 @@
       <Alert :message="alert.message" :show="alert.show" :type="alert.type" @close="alert.show = false" />
 
       <section class="form-section">
-        <AddTodoForm @submit="addTodo" />
+        <AddTodoForm :isLoading="isPostingTodo" @submit="addTodo" />
       </section>
 
       <section class="list">
+        <Spinner class="spinner" v-if="isLoading" />
         <TodoList v-for="todo in todos" :key="todo.id" :title="todo.title" @remove="removeTodo(todo.id)"
           @edit="showEditTodoForm(todo)" />
       </section>
@@ -46,7 +47,7 @@ import NavBar from './components/NavBar.vue';
 import TodoList from './components/TodoList.vue';
 import Btn from './components/Btn.vue';
 import axios from "axios";
-import { EMPTY_ARR, EMPTY_OBJ } from '@vue/shared';
+import Spinner from "./components/Spinner.vue";
 
 export default {
   data() {
@@ -64,7 +65,9 @@ export default {
           id: 0,
           title: ""
         }
-      }
+      },
+      isLoading: false,
+      isPostingTodo: false,
     };
   },
   created() {
@@ -72,12 +75,14 @@ export default {
   },
   methods: {
     async fetchTodos() {
+      this.isLoading = true;
       try {
-        const res = await axios.get('http://localhost:8080/todos');
+        const res = await axios.get("http://localhost:8080/todos");
         this.todos = await res.data;
       } catch (e) {
-        this.showAlert("Failed loading todos, check your internet connection");
+        this.showAlert("Failed loading todos");
       }
+      this.isLoading = false;
     },
 
     showAlert(message, type = "danger") {
@@ -91,7 +96,12 @@ export default {
         this.showAlert("Todo title is required");
         return;
       }
-      const res = await axios.post('http://localhost:8080/todos', { title });
+      this.isPostingTodo = true;
+      const res = await axios.post("http://localhost:8080/todos", {
+        title,
+      });
+
+      this.isPostingTodo = false;
 
       this.todos.push(res.data);
     },
@@ -116,6 +126,11 @@ export default {
 </script>
 
 <style scoped>
+
+.spinner {
+  margin: auto;
+  margin-top: 30px;
+}
 .form {
   display: grid;
   grid-template-columns: 78% 20%;
